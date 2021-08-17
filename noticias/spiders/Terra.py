@@ -26,6 +26,8 @@ class TerraSpider(scrapy.Spider):
 
 	def parse_next(self, response):
 		text = response.css("div.article__content--body p.text").extract()
+		if(text == []):
+			text = response.css("div.article__content--body p").extract()
 		text = ' '.join(text)
 		text_without_content_tags = remove_tags_with_content(text, ('script', ))		
 		text_without_tags = remove_tags(text_without_content_tags)
