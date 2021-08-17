@@ -10,7 +10,8 @@ FILTER_ONE_WEEK = 7
 notices = []
 
 DataProcess.open_file('../G1Initial.jl', notices)
-DataProcess.open_file('../MetropolesInitial.jl', notices)
+DataProcess.open_file('../IG_Initial.jl', notices)
+DataProcess.open_file('../Terra_Initial.jl', notices)
 DataProcess.open_file('../UolInitial.jl', notices)
 
 notices = list(filter(lambda x: DataProcess.date_filter(x['data']) <= FILTER_ONE_WEEK , notices))
