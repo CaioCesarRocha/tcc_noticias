@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Find Similar Notices</title>
+	<meta charset="utf-8" name="referrer" content="strict-origin-when-cross-origin"/>
+	<script src="scripts/background.js"></script>
+	<script src="scripts/rating.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="css/CSS_FindNotices.css" />	
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<div id="header">		
+	<text class="logoText">Find Similar News </text>	
+	<div id="closeContainer">
+		<a href="#">
+			<i class="material-icons" id="btnClose">cancel</i>
+		</a>			
+	</div>		
+</div>
+
+<body>		
+	<div id="containerBTN">		
+		<button id="btnFind">			
+				Iniciar Busca
+				<i class="material-icons" id="iconBtnFind" >search</i>
+		</button>
+	</div>
+
+	<div id="containerLoading">			
+		<div id="loading"></div>
+		<div id="loadInfo">Extraindo dados da notícia...</div>
+	</div>
+
+	<div id = "containerNotices">
+    	<div id="notices"></div>
+    	<div id="errorFound"></div>
+    </div>
+
+	<div id="rating">
+		<div id="errorRating">
+        	<img id="alertIMG" src="https://images.vexels.com/media/users/3/153978/isolated/preview/483ef8b10a46e28d02293a31570c8c56-iacute-cone-de-tra-ccedil-o-colorido-do-sinal-de-aviso-by-vexels.png">
+        	<div class="alert alert-danger" role="alert" id="alertError">
+  			 	Erro: Nenhum voto foi selecionado!
+			</div>
+		</div>
+		
+		<div id="successRating">    	
+        	<div class="alert alert-success" role="alert" id="alertSuccess">
+        		<i class="material-icons" id="successIcon">check_circle</i>
+  			 	Avaliação registrada com sucesso!
+			</div>
+		</div>
+
+		<div id="infoRating">Avalie a similaridade das notícias:</div>
+
+		<button id="btnRating">			
+			Enviar
+			<span class="glyphicon glyphicon-send"></span>
+		</button>
+
+	 	<text class="myratings">Selecione um nível!</text>
+
+        <fieldset class="rating">    	     
+        	<input type="radio" id="star4" name="rating" value="4" />
+        		<label class="full" for="star4" title="Muito Similares"></label>
+        	<input type="radio" id="star3" name="rating" value="3" />
+        		<label class="full" for="star3" title="Boa similaridade"></label>
+        	<input type="radio" id="star2" name="rating" value="2" />
+        	 	<label class="full" for="star2" title="Pouco Similares"></label>
+        	 <input type="radio" id="star1" name="rating" value= "1"/>
+        	 	<label class="full" for="star1" title="Nenhuma similar"></label>    	
+        </fieldset>        
+    </div>	
+
+	<div id="errorRequest">
+		<img id="alertIMG" src="https://images.vexels.com/media/users/3/153978/isolated/preview/483ef8b10a46e28d02293a31570c8c56-iacute-cone-de-tra-ccedil-o-colorido-do-sinal-de-aviso-by-vexels.png">
+
+		<div class="alert alert-info" role="alert" id="textAlert">
+  			Por favor, utilize um dos sites válidos para pesquisa abaixo.
+		</div>
+		<table id="containerTableLinks">
+    			<tr class="containerTR">
+    				<td>
+    					<div class="containerCard" >
+    						<div id="linkGlobo"> </div>
+    					</div>
+    				</td>
+    				<td>
+    					<div class="containerCard">
+    						<div id="linkTerra"> </div>
+    					</div>  	
+    				</td>
+    				<td>
+    					<div class="containerCard">
+    						<div id="linkIG"> </div>
+    					</div>  	
+    				</td>
+    				<td>
+    					<div class="containerCard">
+    						<div id="linkUol"> </div>
+    					</div>  	
+    				</td>
+    			</tr> 						
+    	</table>
+    </div> 
+</body>
+</html>

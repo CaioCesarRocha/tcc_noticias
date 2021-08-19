@@ -1,0 +1,19 @@
+{	
+	"manifest_version":2,
+	"name":"Test for TCC",
+	"version": "0.0.0.1",
+	"icons": {"128": "Lupa.png"},
+	"description":"Encontra noticias similares a noticia base informada",
+	"browser_action":{
+		"default_title": "Find Notices Extension",
+		"default_popup":"findNotices.html"
+	},
+	
+	"permissions": [
+		"webNavigation", 
+		"http://127.0.0.1:8080/",
+		"https://agile-oasis-03992.herokuapp.com/",
+		"tabs"
+    ]
+ 	
+}

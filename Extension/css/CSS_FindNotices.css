@@ -1,0 +1,221 @@
+@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+@import url(http://fonts.googleapis.com/css?family=Calibri:400,300,700);
+
+#header{
+	position: fixed; 
+	overflow: hidden; 
+	background-color: #4a148c; 
+	padding: 8px 5px;  
+	top: 0; right: 0; left: 0;
+	padding-top: 12px;
+}
+
+body{ 
+	width: 325px; 
+}
+
+#homeContainer{
+	float: left;
+}
+
+.logoText{
+	font-size: 18px; 
+	color: #fff;  
+	font-weight: bold; 
+	font-family: 'Bahnschrift'; 
+	margin-left: 10px; 
+}
+
+#closeContainer{
+	float: right;
+}
+
+#btnClose{
+	font-size:23px;
+	color:#fff;
+}
+
+#containerBTN{
+	text-align: center; 
+	align-items: center; 
+	width: 325px; 
+	margin-top: 85px; 
+}
+
+#btnFind{
+	border: 2px solid #751aff; 
+	border-radius: 8px; 
+	margin-bottom: 35px;
+	width: 135px; 
+	height: 40px; 
+	color: #751aff; 	
+	font-weight: bold; 
+	font-family: sans-serif;
+	transition-duration: 0.4s; 
+}
+
+#btnFind:hover{ 
+	background-color: #751aff; 
+	color: white;
+}
+
+#iconBtnFind{
+	font-size:23px; 
+	vertical-align: middle;
+}
+
+#containerLoading{
+	text-align: center; 
+	width: 325px; 
+	margin-bottom: 20px; 
+	display: none;
+}
+
+#loading{
+  	border: 8px solid rgba(178, 161, 201); 
+  	border-left-color: #751aff; 
+  	border-radius: 50%; 
+  	width: 50px; 
+  	height: 50px; 
+  	margin-bottom: 20px;
+  	margin-left: 133px; 
+  	animation: spin 0.8s linear infinite;  
+}
+
+@keyframes spin{ to {transform: rotate(360deg);} }
+
+#loadInfo{
+  	font-family: 'Bahnschrift'; 
+  	font-size: 18px; 
+  	color: #751aff; 
+  	margin-top: 15px; 
+  	width: 100%;
+  	align-self: center; 
+}
+
+#containerNotices{ 
+	width: 325px; 
+	margin-top: 75px; 
+	display: none; 
+}
+
+#errorFound{
+	padding-left: 15px; 
+	padding-right: 15px; 
+	padding-bottom: 30px;
+}
+
+#textAlert{
+	height: 58px; 
+	margin-top: 44px; 
+	font-size: 16px; 
+	padding-left: 45px;  
+	line-height: 15px;
+}
+
+#errorRequest{ display: none; }
+
+#alertIMG{
+	float: left; 
+	width: 28px; 
+	height: 30px; 
+	margin-left: 10px; 
+	margin-top: 14px;
+}
+
+#containerTableLinks{ 
+	width: 325px; 
+}
+
+td{
+	text-align: center; 
+	align-items: center; 
+	width: 20%;
+}
+
+.containerCard{ 
+	height: 60px; 
+	margin: 0 auto; 
+}
+
+.containerCard:hover{background-color: #ececec;}
+
+#linkGlobo{padding-top: 13px;}
+#linkTerra{padding-top: 13px;}
+#linkIG{padding-top: 12px;}
+#linkUol{padding-top: 19px;}
+
+#rating{
+	display: none;
+	background-color:  rgb(74, 20, 140); 
+}
+
+#successRating{display: none;}
+#alertSuccess{height: 52px; line-height: 9px}
+
+#errorRating{display: none;}
+#alertError{
+	height: 35px;  
+	line-height: 9px; 
+	padding-left: 40px;
+}
+
+#btnRating{
+	border: 2px solid #fff; 
+	border-radius: 8px; 
+	transition-duration: 0.4s;
+	height: 35px; 
+	float: left; 
+	margin-left: 40px; 
+	margin-top: 26px;
+	font-weight: bold; 
+	font-family: sans-serif;	
+	color: #fff; 
+	background-color: #30823f;		 
+}
+
+#btnRating:hover{background-color: #fff; color: #30823f; border-color: #30823f }
+
+#iconBtnRat{
+	font-size: 15px; 
+	vertical-align: middle;
+}
+
+#infoRating{
+	font-family: Bahnschrift; 
+	font-size: 18px; 
+	color: #fff; 
+	padding-top: 20px;
+	text-align: center;
+}
+		
+.myratings{ 
+	font-size: 14px; 
+	color: #FFD700; 
+	padding-left: 45px;
+}
+
+.rating{padding-right: 20px;}
+.rating>[id^="star"] {display: none; }
+.rating>label:before {
+	margin: 5px; 
+	font-size: 2.25em;
+	font-family: FontAwesome;
+	display: inline-block; 
+	content: "\f005"
+}
+.rating>label {color: #ddd; float: right;}
+.rating>[id^="star"]:checked~label,
+.rating:not(:checked)>label:hover,
+.rating:not(:checked)>label:hover~label {color: #FFD700}
+.rating>[id^="star"]:checked+label:hover,
+.rating>[id^="star"]:checked~label:hover,
+.rating>label:hover~[id^="star"]:checked~label,
+.rating>[id^="star"]:checked~label:hover~label {color: #FFED85}
+
+#successIcon{
+	font-size:27px; 
+	color:green; 
+	margin-left: 13px; 
+	vertical-align: middle;
+} 
