@@ -219,7 +219,7 @@ function getWorkerResults(dataJSON){
 	dataJSON = dataJSON
 	
 	var xhr = new XMLHttpRequest();
-	var request_url = 'https://tccnoticias.herokuapp.com/' + 'app/url_base/get'
+	var request_url = 'https://herokutccnoticias.herokuapp.com/' + 'app/url_base/get'
 	xhr.open("GET", request_url);
 	xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 //send url to server using django
@@ -267,7 +267,7 @@ function findNotices(text){
         	}
        	}
     };
-	var request_url = 'https://tccnoticias.herokuapp.com/' + 'app/url_base/get'
+	var request_url = 'https://herokutccnoticias.herokuapp.com/' + 'app/url_base/get'
 
 	xhr.open("POST", request_url);
 	xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
