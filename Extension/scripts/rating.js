@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function(){
 //set value rate on mongoDB using django
 function setRating(url_base){
 	var url = url_base
-	var request_url = 'https://agile-oasis-03992.herokuapp.com/' + 'app/url_base/post';
+	var request_url = 'https://tccnoticias.herokuapp.com/' + 'app/url_base/post';
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", request_url);
