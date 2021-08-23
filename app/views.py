@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt  
 #Forbidden (CSRF token missing or incorrect.) Serve para nao ser necessário o token
+from django.views.decorators.csrf import csrf_exempt  
+#Transforms a function decorator into a method decorator so it can be used in an instance method.
 from django.utils.decorators import method_decorator 
-#Transforma um decorador de função em um decorador de método para que possa ser usado em um método de instância.
 from django.conf import settings
 
-#Imports para rodar os modelos de similaridades
+#Imports to run the models similarities
 import sys, gensim, nltk, os, json, re, pymongo, time
 from gensim import corpora,similarities
 from gensim.corpora import Dictionary
@@ -14,7 +14,7 @@ from gensim.models import TfidfModel, LsiModel
 from datetime import date, datetime
 from app.scripts.handling import DataProcess
 
-#Imports para rodar o work com redis
+#Imports to run the worker with redis
 from rq import Queue
 from worker import conn
 from redis import Redis
@@ -31,8 +31,7 @@ collection_notice = 'notices_collection'
 collection_rating = 'notices_rating'
 
 
-BASEDIR = os.getcwd() #gera o caminho da api noticia/api
-FILTER_ONE_WEEK = 7
+BASEDIR = os.getcwd() #make the path of api
 notices, doct_noticeBase = [],[]
 format="%d/%m/%Y"
 
@@ -100,7 +99,7 @@ def process_notice(url_base):
 
 	if(os.path.exists(BASEDIR+"/notice_base.jl")):
 		os.remove("notice_base.jl")
-	#Gera o arquivo da noticia base
+	#Make the file notice_base
 	if (re.search("g1.globo.com",url)):
 		os.system("scrapy crawl G1NoticeBase -a notice_base=%s -o notice_base.jl"%url)
 	elif(re.search("terra.com.br",url)):
@@ -115,11 +114,10 @@ def process_notice(url_base):
 			notice_base = json.loads(line)
 			if notice_base['data'] and notice_base['data'] != '':
 				notice_base['data'] = datetime.strptime(notice_base['data'],format).date()
-
-			#Gera as datas de intervalo(começo e fim para filtro de noticias no banco)	
+			#Make the range dates(Start and End to filter notices in the mongo)	
 			start = DataProcess.date_start(notice_base['data'])
 			end = DataProcess.date_end(notice_base['data'])
-			#Pega as noticias no banco passando o intervalo
+			#Get news from the Mongo that are within the defined range
 			notices = db[collection_notice].find({"data":{"$gt": start,"$lt": end}})
 			notices = [notice for notice in notices]
 	results = process_models(notices, notice_base)
@@ -146,7 +144,7 @@ def get_url_base(request):
 		for obj in json_array:
 		    url_base = obj['url']
 		
-		# chama a function para processamento da noticia a partir da url_base
+		# call the function to process the notice from your url
 		results = process_url(url_base)
 
 		# send data to client (json_array, safe=False)
@@ -213,6 +211,7 @@ def get_id_notice(url, rate):
 	insert = set_rate(rate, notice_id, link)
 	return insert
 
+#function initial to post the notices rate
 @method_decorator(csrf_exempt, name='dispatch')
 def post_rating(request):
 	if request.method == 'POST':
