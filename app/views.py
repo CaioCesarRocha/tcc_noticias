@@ -55,11 +55,11 @@ def process_results(results):
 		data = data.strftime('%d/%m/%Y')
 
 		result_final.append({"title": title, "link": link, "data": data, "picture": picture})
-		print(result_final)
 	return result_final
 
 
-def process_models(notices, notice_base):
+def process_models(notices, body, link):
+	link = link
 	docts = list(map(lambda x: x['corpo'] , notices))
 	dictionary = Dictionary(docts)
 	BoW = [dictionary.doc2bow(doct) for doct in docts]
@@ -70,7 +70,7 @@ def process_models(notices, notice_base):
 	lsi = LsiModel(vector_tfidf, id2word=dictionary, num_topics=200)
 	index = similarities.Similarity(BASEDIR+"/index", lsi[BoW], num_features=len(dictionary), num_best=8)
 	
-	doct_noticeBase = notice_base['corpo']
+	doct_noticeBase = body
 	BoW_notice = [dictionary.doc2bow(doct_noticeBase) for doct in doct_noticeBase]
 
 	vector_lsi = lsi[BoW_notice[0]]
@@ -84,13 +84,13 @@ def process_models(notices, notice_base):
 				results.append([notices[sim[0]]['title'],notices[sim[0]]['link'],notices[sim[0]]['data']])
 			except:
 				pass
-	try:
-		if(results[0][1] == notice_base['link']):
-			results.pop(0)
-		if (len(results) >= 1):
-		    results = process_results(results)
-		    return results		
-	except:
+	
+	if(results[0][1] == link):
+		results.pop(0)
+	if(len(results) >= 1):
+		results = process_results(results)
+		return results		
+	else:
 		results = 404 #NOTHING FOUND
 		return results
 
@@ -112,23 +112,52 @@ def process_notice(url_base):
 	with open('notice_base.jl','r') as file:
 		for line in file:
 			notice_base = json.loads(line)
-			if notice_base['data'] and notice_base['data'] != '':
-				notice_base['data'] = datetime.strptime(notice_base['data'],format).date()
-			#Make the range dates(Start and End to filter notices in the mongo)	
-			start = DataProcess.date_start(notice_base['data'])
-			end = DataProcess.date_end(notice_base['data'])
-			#Get news from the Mongo that are within the defined range
-			notices = db[collection_notice].find({"data":{"$gt": start,"$lt": end}})
-			notices = [notice for notice in notices]
-	results = process_models(notices, notice_base)
+			corpo = notice_base['corpo']
+			data = notice_base['data']
+			
+	results = find_range_notices(data, corpo, url)
 	return results
+
+
+
+def find_range_notices(data, corpo, url):
+	date = data
+	date = datetime.strptime(date,format).date()
+	body = corpo
+	link = url
+
+	#Make the range dates(Start and End to filter notices in the mongo)	
+	start = DataProcess.date_start(date)
+	end = DataProcess.date_end(date)
+	#Get news from the Mongo that are within the defined range
+	notices = db[collection_notice].find({"data":{"$gt": start,"$lt": end}})
+	notices = [notice for notice in notices]
+
+	results = process_models(notices, body, link)
+	return results
+
+
+def try_find_url(url_base):
+	url = url_base
+	try:
+		bases = db[collection_notice].find({"link": url})
+		base = [base for base in bases]
+		data = list(map(lambda x: x['data'], base))
+		data = data[0].strftime('%d/%m/%Y')
+		corpo = list(map(lambda x: x['corpo'], base))
+		corpo = corpo[0]
+		results = find_range_notices(data, corpo, url)
+		return results
+	except:
+		results = process_notice(url)
+		return results
+
 
 def process_url(url_base):
 	url = url_base
-
 	if ((re.search("g1.globo.com",url)) or (re.search("terra.com.br",url)) or (re.search("uol.com.br",url)) or (re.search("ig.com.br",url))):
 		q = Queue(connection=conn)		
-		results = q.enqueue(process_notice, url_base, job_id='worker_sims')
+		results = q.enqueue(try_find_url, url, job_id='worker_sims')
 		results = 205
 		return results
 	else:
@@ -164,42 +193,73 @@ def get_worker_results():
 		results = 1
 		return results
 	elif(status == "finished"):
+		job.refresh()
 		results = job.result
+
 		return results
-	
 
+def set_rates(rate,_id, numVotos, rate_actual, rate_one, rate_two, rate_tree, rate_four):
+	rate_total = 0
+	rate_total = rate_actual * numVotos
+	numVotos = numVotos + 1
+	new_rate = (float(rate_total) + float(rate))/ numVotos
+	new_rate = round(new_rate,2)
 
+	try:
+		if(rate == "1"):
+			rate_one = rate_one + 1
+			db[collection_rating].update_one({'_id': _id}, {'$set': {'rate_average': new_rate, 'numVotos': numVotos, 'rate_one': rate_one}},upsert=False)
+		elif(rate == "2"):
+			rate_two = rate_two + 1
+			db[collection_rating].update_one({'_id': _id}, {'$set': {'rate_average': new_rate, 'numVotos': numVotos, 'rate_two': rate_two}},upsert=False)
+		elif(rate == "3"):
+			rate_tree = rate_tree + 1
+			db[collection_rating].update_one({'_id': _id}, {'$set': {'rate_average': new_rate, 'numVotos': numVotos, 'rate_tree': rate_tree}},upsert=False)
+		else:
+			rate_four = rate_four + 1
+			db[collection_rating].update_one({'_id': _id}, {'$set': {'rate_average': new_rate, 'numVotos': numVotos, 'rate_four': rate_four}},upsert=False)
+		result = 200
+		return result
+	except:
+		print("error_set_rate")
+		result = 500
+		return result
 
-
-
-def set_rate(rate,notice_id, link):
-	new_rate = rate
+def get_actual_rates(rate,notice_id, link):
+	rate = rate
+	_id = notice_id
 	link = link
-	if(notice_id == []):
-		_id = False
-	else:
-		_id = notice_id[0]	
 	
 	try:
 		rates = db[collection_rating].find({"_id": _id})
 		rates = [rate_actual for rate_actual in rates]
-		rate_actual = list(map(lambda x: x['rate'] , rates))
+		rate_actual = list(map(lambda x: x['rate_average'] , rates))
 		rate_actual = rate_actual[0]
 		numVotos = list(map(lambda x: x['numVotos'] , rates))
 		numVotos = numVotos[0]
+		rate_one = list(map(lambda x: x['rate_one'] , rates))
+		rate_one = rate_one[0]
+		rate_two = list(map(lambda x: x['rate_two'] , rates))
+		rate_two = rate_two[0]
+		rate_tree = list(map(lambda x: x['rate_tree'] , rates))
+		rate_tree = rate_tree[0]
+		rate_four = list(map(lambda x: x['rate_four'] , rates))
+		rate_four = rate_four[0]
 
-		rate_total = rate_actual * numVotos
-		numVotos = numVotos + 1
-		new_rate = (float(rate_total) + float(rate))/ numVotos
-		new_rate = round(new_rate,2)
-
-		db[collection_rating].update_one({'_id': _id}, {'$set': {'rate': new_rate, 'numVotos': numVotos}},upsert=False)	
-		result = 200
-		return result
+		insert = set_rates(rate,_id, numVotos, rate_actual, rate_one, rate_two, rate_tree, rate_four)
+		return insert
 	except:
-		db[collection_rating].insert({"rate": rate, "link": link, "numVotos": 1} )		
-		result = 200		
-		return result
+		if(rate == "1"):
+			db[collection_rating].insert({"numVotos": 1, "rate_average": rate, "link": link, "rate_one": 1, "rate_two": 0, "rate_tree": 0, "rate_four": 0})
+		elif(rate == "2"):
+			db[collection_rating].insert({"numVotos": 1, "rate_average": rate, "link": link, "rate_one": 0, "rate_two": 1, "rate_tree": 0, "rate_four": 0})
+		elif(rate == "3"):
+			db[collection_rating].insert({"numVotos": 1, "rate_average": rate, "link": link, "rate_one": 0, "rate_two": 0, "rate_tree": 1, "rate_four": 0})
+		else:
+			db[collection_rating].insert({"numVotos": 1, "rate_average": rate, "link": link, "rate_one": 0, "rate_two": 0, "rate_tree": 0, "rate_four": 1})
+			result = 200
+			return result
+	
 
 def get_id_notice(url, rate):		
 	link = url
@@ -207,9 +267,14 @@ def get_id_notice(url, rate):
 	notices = db[collection_rating].find({"link": link})
 	notice = [notice for notice in notices]
 	notice_id = list(map(lambda x: x['_id'], notice))
+	if(notice_id == []):
+		notice_id = False
+	else:
+		notice_id = notice_id[0]
 	
-	insert = set_rate(rate, notice_id, link)
+	insert = get_actual_rates(rate, notice_id, link)
 	return insert
+
 
 #function initial to post the notices rate
 @method_decorator(csrf_exempt, name='dispatch')
