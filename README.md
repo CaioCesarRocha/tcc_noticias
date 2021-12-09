@@ -1,6 +1,6 @@
 FERRAMENTA: Extensão de navegador WEB(Chrome) para indicação de notícias similares.
 
-LINGUAGENS utilizadas:
+LINGUAGENS UTILIZADAS:
 
  -Python
  
@@ -9,7 +9,7 @@ LINGUAGENS utilizadas:
  -HTML e CSS
  
  
- Tecnologias utilizadas:
+ TECNOLOGIAS UTILIZADAS:
  
  -Framework Scrapy para extração de dados
  
@@ -24,7 +24,7 @@ LINGUAGENS utilizadas:
  -Biblioteca Plotly e Pandas para poder gerar os gráficos para o dashboard
  
  
- BANCO de DADOS:
+ BANCO DE DADOS:
  
  -MongoDB Atlas -> É um banco de dados em nuvem, NoSQL, utiliza os serviços da AWS
  
