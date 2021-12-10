@@ -66,7 +66,7 @@ def update_output(n_clicks, value):
     print(link)
     #CONNECTION MONGO_DB
     MONGO_DATABASE = "crawler"
-    client = pymongo.MongoClient("mongodb+srv://myCrawler:myCrawler209@clusternotices.rwnvw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+    url_mongo = os.environ['MONGODB_URI']
     db = client[MONGO_DATABASE]
     collection_notice = 'notices_collection'
     collection_rating = 'notices_rating'
